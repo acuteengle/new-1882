@@ -67,7 +67,7 @@ const preserved = [
     creator: 'Lulu Wang',
     type: 'Movie',
     description:
-      'Based on Wangs own family a comedy-drama about a grandmother a lie told with love and the different ways cultures hold grief.',
+      'Based on Wang’s own family: a comedy-drama about a grandmother, a lie told with love, and the different ways cultures hold grief.',
     release_date: '2019-07-12',
     language: 'English / Mandarin',
   },
@@ -208,7 +208,7 @@ const preserved = [
   },
   {
     title: 'Blasian Narratives',
-    creator: 'Various hosts',
+    creator: 'Jivan Atman, Victoria Thomason, and Lysander Puccio',
     type: 'Podcast',
     description:
       'Conversations at the intersection of Black and Asian diasporas exploring solidarity history and everyday kinship.',
@@ -289,37 +289,231 @@ const preserved = [
   },
 ]
 
-const TEMPLATES = [
-  (w) =>
-    `${w.title} is a widely taught ${w.type.toLowerCase()} from ${w.region} that helps audiences compare how family migration and power show up on screen and in everyday life.`,
-  (w) =>
-    `${w.title} remains a touchstone in ${w.region} cultural studies for how it stages identity history and community with clarity and emotional precision.`,
-  (w) =>
-    `Classrooms and film clubs often return to ${w.title} when discussing ${w.region} storytelling traditions diaspora voices and the politics of representation.`,
-  (w) =>
-    `${w.title} offers a memorable entry point into ${w.region} media histories inviting discussion of language genre conventions and transnational audiences.`,
-  (w) =>
-    `This ${w.type.toLowerCase()} from ${w.region} continues to spark conversation about whose stories travel globally and how local contexts shape meaning.`,
-  (w) =>
-    `${w.title} is frequently recommended for readers and viewers building literacy in Asian and Asian diaspora cultures across generations.`,
-  (w) =>
-    `Scholars and community educators cite ${w.title} when mapping how ${w.region} creators experiment with form while staying rooted in lived experience.`,
-  (w) =>
-    `${w.title} helps audiences practice close attention to nuance in ${w.region} narratives where humor grief and resilience often share the same scene.`,
-]
-
 function hashString(s) {
   let h = 0
   for (let i = 0; i < s.length; i += 1) h = (h * 31 + s.charCodeAt(i)) | 0
   return Math.abs(h)
 }
 
+/** Natural adjective for "a ___ film" etc.; null if we should say "from {region}" instead. */
+function regionAdjective(region) {
+  const map = {
+    'South Korea': 'South Korean',
+    Japan: 'Japanese',
+    China: 'Chinese',
+    Taiwan: 'Taiwanese',
+    'Hong Kong': 'Hong Kong',
+    India: 'Indian',
+    'United States': 'American',
+    'United Kingdom': 'British',
+    Singapore: 'Singaporean',
+    Thailand: 'Thai',
+    Vietnam: 'Vietnamese',
+    Indonesia: 'Indonesian',
+    Philippines: 'Filipino',
+    Malaysia: 'Malaysian',
+    Bangladesh: 'Bangladeshi',
+    Pakistan: 'Pakistani',
+    Nepal: 'Nepali',
+    'Sri Lanka': 'Sri Lankan',
+    Iran: 'Iranian',
+    Jordan: 'Jordanian',
+    Syria: 'Syrian',
+    Canada: 'Canadian',
+    France: 'French',
+    Australia: 'Australian',
+    Hungary: 'Hungarian',
+    Mongolia: 'Mongolian',
+    Cambodia: 'Cambodian',
+    Myanmar: 'Burmese',
+    Kazakhstan: 'Kazakh',
+  }
+  return map[region] ?? null
+}
+
+function yearFrom(dateStr) {
+  const y = String(dateStr).slice(0, 4)
+  return /^\d{4}$/.test(y) ? y : null
+}
+
+/** "a" vs "an" before adjective (Indian, American, …). */
+function aAn(word) {
+  if (!word) return 'a'
+  const w = String(word).trim()
+  if (/^[aeiou]/i.test(w)) return 'an'
+  return 'a'
+}
+
+function capitalizeFirst(str) {
+  if (!str) return str
+  return str.charAt(0).toUpperCase() + str.slice(1)
+}
+
+function pickVariant(seed, variants) {
+  return variants[seed % variants.length]
+}
+
 /**
+ * Short catalog-style blurbs (not meta commentary about "studies" or "literacy").
  * @param {{ title: string; creator: string; type: string; release_date: string; language: string; region: string }} w
  */
 function describeGenerated(w) {
-  const fn = TEMPLATES[hashString(w.title + w.type) % TEMPLATES.length]
-  return fn(w)
+  const { title, creator, type, release_date: rd, region } = w
+  const y = yearFrom(rd)
+  const adj = regionAdjective(region)
+  const origin = adj ?? region
+  const seed = hashString(`${title}|${type}|${creator}`)
+
+  const by = creator.includes(',') || /\band\b/i.test(creator)
+    ? `from ${creator}`
+    : `by ${creator}`
+
+  const aa = aAn(origin)
+
+  switch (type) {
+    case 'Movie': {
+      const v = pickVariant(seed, [
+        () =>
+          y
+            ? `Released in ${y}, ${title} is ${aa} ${origin} feature shaped ${by}, pairing strong performances with a clear sense of place and pacing.`
+            : `${title} is ${aa} ${origin} feature shaped ${by}, pairing strong performances with a clear sense of place and pacing.`,
+        () =>
+          y
+            ? `${title} (${y}) is ${aa} ${origin} film ${by === `by ${creator}` ? `directed by ${creator}` : fromCreators(creator)}, balancing character drama with memorable set pieces and tone.`
+            : `${title} is ${aa} ${origin} film ${by === `by ${creator}` ? `directed by ${creator}` : fromCreators(creator)}, balancing character drama with memorable set pieces and tone.`,
+        () =>
+          y
+            ? `This ${y} ${origin} release, ${title}, is helmed by ${creator} and sits among standout work from its era for mood, story, and craft.`
+            : `${title}, ${aa} ${origin} release, is helmed by ${creator} and stands out for mood, story, and craft.`,
+        () =>
+          y
+            ? `${title} (${y}) is ${aa} ${origin} film ${by}, following characters through conflict and consequence with a distinctive visual and narrative voice.`
+            : `${title} is ${aa} ${origin} film ${by}, following characters through conflict and consequence with a distinctive visual and narrative voice.`,
+      ])
+      return v()
+    }
+    case 'TV Show': {
+      const v = pickVariant(seed, [
+        () =>
+          y
+            ? `${title} (${y} debut) is ${aa} ${origin} series ${by}, built for long-form storytelling, recurring characters, and serialized stakes.`
+            : `${title} is ${aa} ${origin} series ${by}, built for long-form storytelling, recurring characters, and serialized stakes.`,
+        () =>
+          y
+            ? `${capitalizeFirst(`${aa} ${origin} show`)} led ${by}, ${title} premiered around ${y} and blends episodic hooks with season-long arcs and production polish.`
+            : `${capitalizeFirst(`${aa} ${origin} show`)} led ${by}, ${title} blends episodic hooks with season-long arcs and production polish.`,
+        () =>
+          `${title} follows an ensemble through shifting relationships and plot turns; ${by}, it represents a notable ${origin} entry in contemporary TV.`,
+      ])
+      return v()
+    }
+    case 'Anime': {
+      const v = pickVariant(seed, [
+        () =>
+          y
+            ? `${title} (${y}) is ${aa} ${origin} animated series ${by}, known for pacing, design, and serialized storytelling that built a wide fan base.`
+            : `${title} is ${aa} ${origin} animated series ${by}, known for pacing, design, and serialized storytelling.`,
+        () =>
+          y
+            ? `This ${origin} anime from ${y}, ${title}, is associated with ${creator} and mixes action, emotion, and distinctive art direction.`
+            : `This ${origin} anime, ${title}, is associated with ${creator} and mixes action, emotion, and distinctive art direction.`,
+      ])
+      return v()
+    }
+    case 'Documentary': {
+      const lensArt = aAn(origin)
+      const v = pickVariant(seed, [
+        () =>
+          y
+            ? `${title} (${y}) is ${aa} ${origin} documentary ${by}, focusing on real people and events with an observational, journalistic edge.`
+            : `${title} is ${aa} ${origin} documentary ${by}, focusing on real people and events with an observational, journalistic edge.`,
+        () =>
+          y
+            ? `Shot through ${lensArt} ${origin} lens, ${title} (${y}) ${by === `by ${creator}` ? `comes from filmmaker ${creator}` : `is credited to ${creator}`} and asks viewers to sit with facts, context, and human detail.`
+            : `Shot through ${lensArt} ${origin} lens, ${title} ${by === `by ${creator}` ? `comes from filmmaker ${creator}` : `is credited to ${creator}`} and asks viewers to sit with facts, context, and human detail.`,
+      ])
+      return v()
+    }
+    case 'Book': {
+      const v = pickVariant(seed, [
+        () =>
+          y
+            ? `${title} (${y}) is a novel ${by} that weaves personal voice with history, family, and place across its chapters.`
+            : `${title} is a novel ${by} that weaves personal voice with history, family, and place across its chapters.`,
+        () =>
+          y
+            ? `In ${title}, ${creator} traces characters through memory, migration, and choice; the ${y} publication remains a readable entry point into ${origin} letters and ideas.`
+            : `In ${title}, ${creator} traces characters through memory, migration, and choice, offering a readable entry point into ${origin} letters and ideas.`,
+        () =>
+          y
+            ? `${by === `by ${creator}` ? `${possessive(creator)} ` : 'This '}${title} (${y}) mixes intimate scenes with wider social backdrop, anchored in ${origin} and diaspora storytelling traditions.`
+            : `${by === `by ${creator}` ? `${possessive(creator)} ` : 'This '}${title} mixes intimate scenes with wider social backdrop, anchored in ${origin} and diaspora storytelling traditions.`,
+      ])
+      return v()
+    }
+    case 'Graphic novel':
+    case 'Manga': {
+      const format = type === 'Manga' ? 'serialized manga' : 'a graphic novel'
+      return y
+        ? `${title} (${y}) is ${format} ${by}, pairing panel rhythm and dialogue with a strong visual identity rooted in ${origin} comics culture.`
+        : `${title} is ${format} ${by}, pairing panel rhythm and dialogue with a strong visual identity rooted in ${origin} comics culture.`
+    }
+    case 'Music': {
+      const v = pickVariant(seed, [
+        () =>
+          y
+            ? `${title} (${y}) is a recorded project ${by}, showcasing melody, production, and performance within the ${origin} popular-music landscape.`
+            : `${title} is a recorded project ${by}, showcasing melody, production, and performance within the ${origin} popular-music landscape.`,
+        () =>
+          y
+            ? `${title} (${y}), from ${creator}, collects tracks that highlight tone, arrangement, and era-defining studio choices in ${origin} pop and soundtrack culture.`
+            : `${title}, from ${creator}, collects tracks that highlight tone, arrangement, and era-defining studio choices in ${origin} pop and soundtrack culture.`,
+      ])
+      return v()
+    }
+    case 'Podcast': {
+      return `${title} is a show ${by}, mixing interviews, commentary, and stories aimed at listeners curious about culture, identity, and community.`
+    }
+    case 'Video game': {
+      return y
+        ? `${title} (${y}) is a game ${by}, combining systems, world-building, and play feel associated with ${origin} studios and design traditions.`
+        : `${title} is a game ${by}, combining systems, world-building, and play feel associated with ${origin} studios and design traditions.`
+    }
+    case 'Web novel': {
+      return `${title} is an online serial ${by}, written for chapter-by-chapter reading and fan engagement; it sits in the ${origin} web-fiction ecosystem.`
+    }
+    case 'Short fiction': {
+      return `${title} is short fiction ${by}, compact in length but wide in implication—typical of contemporary ${origin} and diaspora story forms.`
+    }
+    default: {
+      const v = pickVariant(seed, [
+        () =>
+          y
+            ? `${title} (${y}) is ${aa} ${type.toLowerCase()} ${by}, notable for craft and context within ${origin} media and arts.`
+            : `${title} is ${aa} ${type.toLowerCase()} ${by}, notable for craft and context within ${origin} media and arts.`,
+        () =>
+          y
+            ? `${possessiveLead(creator)}${title} (${y}) offers a concise way into ${type.toLowerCase()} work from ${region}, mixing form and cultural backdrop.`
+            : `${possessiveLead(creator)}${title} offers a concise way into ${type.toLowerCase()} work from ${region}, mixing form and cultural backdrop.`,
+      ])
+      return v()
+    }
+  }
+}
+
+function possessive(name) {
+  return /s$/i.test(name.trim()) ? `${name}'` : `${name}'s`
+}
+
+function possessiveLead(creator) {
+  if (/\band\b/i.test(creator) || creator.includes(',')) return ''
+  return `${possessive(creator)} `
+}
+
+function fromCreators(creator) {
+  return /\band\b/i.test(creator) || creator.includes(',')
+    ? `from ${creator}`
+    : `directed by ${creator}`
 }
 
 /**
