@@ -1,4 +1,12 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import {
+  forwardRef,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 import Papa from 'papaparse'
 import './App.css'
 
@@ -17,11 +25,19 @@ function rowMatchesLanguage(row, selected) {
   return languageTags(row.language).some((t) => t.toLowerCase() === want)
 }
 
-function MediaTile({ item, onOpen }) {
+function MediaTile({ item, onOpen, staggerIndex, animateEnter }) {
+  const stagger = Math.min(staggerIndex, 22)
   return (
     <button
       type="button"
-      className="media-tile"
+      className={
+        animateEnter ? 'media-tile media-tile--enter' : 'media-tile'
+      }
+      style={
+        animateEnter
+          ? { '--tile-stagger': String(stagger) }
+          : undefined
+      }
       onClick={() => onOpen(item)}
       aria-label={`${item.title}, ${item.type}. Open details.`}
     >
@@ -43,32 +59,78 @@ function MediaTile({ item, onOpen }) {
   )
 }
 
-function MediaModal({ item, onClose }) {
+function modalExitMs() {
+  if (typeof window === 'undefined') return 420
+  return window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    ? 180
+    : 420
+}
+
+const MediaModal = forwardRef(function MediaModal({ item, onClose }, ref) {
   const closeRef = useRef(null)
+  const exitTimerRef = useRef(null)
+  const [visible, setVisible] = useState(false)
+
+  useEffect(() => {
+    const id = requestAnimationFrame(() => {
+      requestAnimationFrame(() => setVisible(true))
+    })
+    return () => cancelAnimationFrame(id)
+  }, [])
+
+  const dismiss = useCallback(() => {
+    if (exitTimerRef.current !== null) return
+    setVisible(false)
+    const ms = modalExitMs()
+    exitTimerRef.current = window.setTimeout(() => {
+      exitTimerRef.current = null
+      onClose()
+    }, ms)
+  }, [onClose])
+
+  useImperativeHandle(ref, () => ({ dismiss }), [dismiss])
+
+  useEffect(
+    () => () => {
+      if (exitTimerRef.current !== null) {
+        clearTimeout(exitTimerRef.current)
+        exitTimerRef.current = null
+      }
+    },
+    [],
+  )
 
   useEffect(() => {
     const onKey = (e) => {
-      if (e.key === 'Escape') onClose()
+      if (e.key === 'Escape') dismiss()
     }
     document.addEventListener('keydown', onKey)
     const prevOverflow = document.body.style.overflow
     document.body.style.overflow = 'hidden'
-    closeRef.current?.focus()
     return () => {
       document.removeEventListener('keydown', onKey)
       document.body.style.overflow = prevOverflow
     }
-  }, [item, onClose])
+  }, [dismiss])
+
+  useEffect(() => {
+    if (!visible) return
+    closeRef.current?.focus()
+  }, [visible])
 
   const titleId = 'media-modal-title'
 
   return (
-    <div className="modal-layer">
+    <div
+      className={
+        visible ? 'modal-layer modal-layer--visible' : 'modal-layer'
+      }
+    >
       <div
         className="modal-backdrop"
         role="presentation"
         aria-hidden="true"
-        onClick={onClose}
+        onClick={dismiss}
       />
       <div
         className="modal-panel"
@@ -80,7 +142,7 @@ function MediaModal({ item, onClose }) {
           ref={closeRef}
           type="button"
           className="modal-close"
-          onClick={onClose}
+          onClick={dismiss}
           aria-label="Close"
         >
           <span aria-hidden="true">×</span>
@@ -104,7 +166,9 @@ function MediaModal({ item, onClose }) {
       </div>
     </div>
   )
-}
+})
+
+MediaModal.displayName = 'MediaModal'
 
 export default function App() {
   const [rows, setRows] = useState([])
@@ -113,6 +177,11 @@ export default function App() {
   const [filterLanguage, setFilterLanguage] = useState('')
   const [modalItem, setModalItem] = useState(null)
   const closeModal = useCallback(() => setModalItem(null), [])
+  const mediaModalRef = useRef(null)
+  const [tileAnimGeneration, setTileAnimGeneration] = useState(0)
+  const prevFilterSigRef = useRef(null)
+
+  const filterSignature = `${filterType}|${filterLanguage}`
 
   useEffect(() => {
     let cancelled = false
@@ -191,8 +260,26 @@ export default function App() {
         r.type === modalItem.type &&
         r.creator === modalItem.creator,
     )
-    if (!stillVisible) closeModal()
+    if (!stillVisible) {
+      const api = mediaModalRef.current
+      if (api?.dismiss) api.dismiss()
+      else closeModal()
+    }
   }, [filtered, modalItem, closeModal])
+
+  useEffect(() => {
+    if (loadState !== 'ready') return
+    if (prevFilterSigRef.current === null) {
+      prevFilterSigRef.current = filterSignature
+      return
+    }
+    if (prevFilterSigRef.current !== filterSignature) {
+      prevFilterSigRef.current = filterSignature
+      setTileAnimGeneration((g) => g + 1)
+    }
+  }, [filterSignature, loadState])
+
+  const animateTilesEnter = tileAnimGeneration > 0
 
   return (
     <div className="page">
@@ -271,11 +358,13 @@ export default function App() {
               {filterLanguage ? ` · ${filterLanguage}` : ''}
             </p>
             <div className="tile-grid">
-              {filtered.map((item) => (
+              {filtered.map((item, index) => (
                 <MediaTile
-                  key={`${item.title}-${item.type}-${item.creator}`}
+                  key={`${tileAnimGeneration}-${item.title}-${item.type}-${item.creator}`}
                   item={item}
                   onOpen={setModalItem}
+                  staggerIndex={index}
+                  animateEnter={animateTilesEnter}
                 />
               ))}
             </div>
@@ -289,7 +378,11 @@ export default function App() {
       </section>
 
       {modalItem && (
-        <MediaModal item={modalItem} onClose={closeModal} />
+        <MediaModal
+          ref={mediaModalRef}
+          item={modalItem}
+          onClose={closeModal}
+        />
       )}
 
       <footer className="site-footer">
