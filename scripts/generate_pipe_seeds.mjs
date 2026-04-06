@@ -1,0 +1,696 @@
+import fs from 'node:fs'
+import path from 'node:path'
+import { fileURLToPath } from 'node:url'
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
+
+function esc(s) {
+  return String(s).replace(/\|/g, '/')
+}
+
+function line(parts) {
+  return parts.map(esc).join('|')
+}
+
+/** @type {string[]} */
+const records = []
+
+function r(title, creator, type, release_date, language, region) {
+  records.push(
+    line([title, creator, type, release_date, language, region]),
+  )
+}
+
+// --- Korean cinema & drama (sample of widely discussed works) ---
+;[
+  ['Oldboy', 'Park Chan-wook', 'Movie', '2003-11-21', 'Korean', 'South Korea'],
+  ['Burning', 'Lee Chang-dong', 'Movie', '2018-05-17', 'Korean', 'South Korea'],
+  ['Decision to Leave', 'Park Chan-wook', 'Movie', '2022-06-29', 'Korean', 'South Korea'],
+  ['The Handmaiden', 'Park Chan-wook', 'Movie', '2016-06-01', 'Korean', 'South Korea'],
+  ['Memories of Murder', 'Bong Joon-ho', 'Movie', '2003-05-02', 'Korean', 'South Korea'],
+  ['Train to Busan', 'Yeon Sang-ho', 'Movie', '2016-07-20', 'Korean', 'South Korea'],
+  ['Broker', 'Hirokazu Kore-eda', 'Movie', '2022-05-26', 'Korean', 'South Korea'],
+  ['The Host', 'Bong Joon-ho', 'Movie', '2006-07-27', 'Korean', 'South Korea'],
+  ['Mother', 'Bong Joon-ho', 'Movie', '2009-05-28', 'Korean', 'South Korea'],
+  ['Snowpiercer', 'Bong Joon-ho', 'Movie', '2013-08-01', 'English / Korean', 'South Korea'],
+  ['The Wailing', 'Na Hong-jin', 'Movie', '2016-05-12', 'Korean', 'South Korea'],
+  ['A Tale of Two Sisters', 'Kim Jee-woon', 'Movie', '2003-06-13', 'Korean', 'South Korea'],
+  ['The Villainess', 'Jung Byung-gil', 'Movie', '2017-06-08', 'Korean', 'South Korea'],
+  ['Space Sweepers', 'Jo Sung-hee', 'Movie', '2021-02-05', 'Korean', 'South Korea'],
+  ['Peninsula', 'Yeon Sang-ho', 'Movie', '2020-07-15', 'Korean', 'South Korea'],
+  ['The Age of Shadows', 'Kim Jee-woon', 'Movie', '2016-09-03', 'Korean', 'South Korea'],
+  ['The Attorney', 'Yang Woo-suk', 'Movie', '2013-12-18', 'Korean', 'South Korea'],
+  ['Ode to My Father', 'Yoon Je-kyoon', 'Movie', '2014-12-17', 'Korean', 'South Korea'],
+  ['The Admiral: Roaring Currents', 'Kim Han-min', 'Movie', '2014-07-30', 'Korean', 'South Korea'],
+  ['Along with the Gods: The Two Worlds', 'Kim Yong-hwa', 'Movie', '2017-12-20', 'Korean', 'South Korea'],
+  ['Exit', 'Lee Sang-geun', 'Movie', '2019-07-31', 'Korean', 'South Korea'],
+  ['Extreme Job', 'Lee Byeong-heon', 'Movie', '2019-01-23', 'Korean', 'South Korea'],
+  ['Miracle in Cell No. 7', 'Lee Hwan-kyung', 'Movie', '2013-01-23', 'Korean', 'South Korea'],
+  ['The Outlaws', 'Kang Yoon-sung', 'Movie', '2017-10-03', 'Korean', 'South Korea'],
+  ['New World', 'Park Hoon-jung', 'Movie', '2013-02-21', 'Korean', 'South Korea'],
+  ['I Saw the Devil', 'Kim Jee-woon', 'Movie', '2010-08-12', 'Korean', 'South Korea'],
+  ['Spring Summer Fall Winter and Spring', 'Kim Ki-duk', 'Movie', '2003-09-19', 'Korean', 'South Korea'],
+  ['Poetry', 'Lee Chang-dong', 'Movie', '2010-05-13', 'Korean', 'South Korea'],
+  ['Secret Sunshine', 'Lee Chang-dong', 'Movie', '2007-05-23', 'Korean', 'South Korea'],
+  ['The Chaser', 'Na Hong-jin', 'Movie', '2008-02-14', 'Korean', 'South Korea'],
+  ['The Yellow Sea', 'Na Hong-jin', 'Movie', '2010-12-22', 'Korean', 'South Korea'],
+  ['Castaway on the Moon', 'Lee Hae-jun', 'Movie', '2009-05-14', 'Korean', 'South Korea'],
+  ['A Bittersweet Life', 'Kim Jee-woon', 'Movie', '2005-04-01', 'Korean', 'South Korea'],
+  ['The Good the Bad the Weird', 'Kim Jee-woon', 'Movie', '2008-07-24', 'Korean', 'South Korea'],
+  ['The Man from Nowhere', 'Lee Jeong-beom', 'Movie', '2010-08-05', 'Korean', 'South Korea'],
+  ['The Berlin File', 'Ryu Seung-wan', 'Movie', '2013-01-30', 'Korean', 'South Korea'],
+  ['Veteran', 'Ryoo Seung-wan', 'Movie', '2015-08-05', 'Korean', 'South Korea'],
+  ['The Pirates', 'Lee Suk-hoon', 'Movie', '2014-08-06', 'Korean', 'South Korea'],
+  ['The Royal Tailor', 'Lee Won-suk', 'Movie', '2014-12-24', 'Korean', 'South Korea'],
+  ['The Throne', 'Lee Joon-ik', 'Movie', '2015-09-16', 'Korean', 'South Korea'],
+].forEach((x) => r(...x))
+
+// --- Japanese cinema & animation features ---
+;[
+  ['Spirited Away', 'Hayao Miyazaki', 'Movie', '2001-07-20', 'Japanese', 'Japan'],
+  ['Your Name', 'Makoto Shinkai', 'Movie', '2016-08-26', 'Japanese', 'Japan'],
+  ['Shoplifters', 'Hirokazu Kore-eda', 'Movie', '2018-06-08', 'Japanese', 'Japan'],
+  ['Drive My Car', 'Ryusuke Hamaguchi', 'Movie', '2021-07-11', 'Japanese', 'Japan'],
+  ['Rashomon', 'Akira Kurosawa', 'Movie', '1950-08-26', 'Japanese', 'Japan'],
+  ['Seven Samurai', 'Akira Kurosawa', 'Movie', '1954-04-26', 'Japanese', 'Japan'],
+  ['Tokyo Story', 'Yasujiro Ozu', 'Movie', '1953-11-03', 'Japanese', 'Japan'],
+  ['Harakiri', 'Masaki Kobayashi', 'Movie', '1962-09-16', 'Japanese', 'Japan'],
+  ['Woman in the Dunes', 'Hiroshi Teshigahara', 'Movie', '1964-02-15', 'Japanese', 'Japan'],
+  ['Battle Royale', 'Kinji Fukasaku', 'Movie', '2000-12-16', 'Japanese', 'Japan'],
+  ['Nobody Knows', 'Hirokazu Kore-eda', 'Movie', '2004-08-07', 'Japanese', 'Japan'],
+  ['Still Walking', 'Hirokazu Kore-eda', 'Movie', '2008-09-28', 'Japanese', 'Japan'],
+  ['Like Father Like Son', 'Hirokazu Kore-eda', 'Movie', '2013-09-28', 'Japanese', 'Japan'],
+  ['Our Little Sister', 'Hirokazu Kore-eda', 'Movie', '2015-06-13', 'Japanese', 'Japan'],
+  ['After Life', 'Hirokazu Kore-eda', 'Movie', '1998-05-23', 'Japanese', 'Japan'],
+  ['Departures', 'Yojiro Takita', 'Movie', '2008-08-23', 'Japanese', 'Japan'],
+  ['Confessions', 'Tetsuya Nakashima', 'Movie', '2010-06-05', 'Japanese', 'Japan'],
+  ['Love Exposure', 'Sion Sono', 'Movie', '2008-11-29', 'Japanese', 'Japan'],
+  ['Cold Fish', 'Sion Sono', 'Movie', '2010-09-07', 'Japanese', 'Japan'],
+  ['Audition', 'Takashi Miike', 'Movie', '1999-10-06', 'Japanese', 'Japan'],
+  ['13 Assassins', 'Takashi Miike', 'Movie', '2010-09-25', 'Japanese', 'Japan'],
+  ['Ichi the Killer', 'Takashi Miike', 'Movie', '2001-12-22', 'Japanese', 'Japan'],
+  ['Sonatine', 'Takeshi Kitano', 'Movie', '1993-09-10', 'Japanese', 'Japan'],
+  ['Hana-bi', 'Takeshi Kitano', 'Movie', '1997-12-20', 'Japanese', 'Japan'],
+  ['Zatoichi', 'Takeshi Kitano', 'Movie', '2003-09-06', 'Japanese', 'Japan'],
+  ['Perfect Blue', 'Satoshi Kon', 'Movie', '1998-02-28', 'Japanese', 'Japan'],
+  ['Millennium Actress', 'Satoshi Kon', 'Movie', '2001-09-14', 'Japanese', 'Japan'],
+  ['Tokyo Godfathers', 'Satoshi Kon', 'Movie', '2003-11-08', 'Japanese', 'Japan'],
+  ['Paprika', 'Satoshi Kon', 'Movie', '2006-11-25', 'Japanese', 'Japan'],
+  ['Grave of the Fireflies', 'Isao Takahata', 'Movie', '1988-04-16', 'Japanese', 'Japan'],
+  ['Princess Mononoke', 'Hayao Miyazaki', 'Movie', '1997-07-12', 'Japanese', 'Japan'],
+  ['Howls Moving Castle', 'Hayao Miyazaki', 'Movie', '2004-11-20', 'Japanese', 'Japan'],
+  ['The Wind Rises', 'Hayao Miyazaki', 'Movie', '2013-07-20', 'Japanese', 'Japan'],
+  ['Akira', 'Katsuhiro Otomo', 'Movie', '1988-07-16', 'Japanese', 'Japan'],
+  ['Ghost in the Shell', 'Mamoru Oshii', 'Movie', '1995-11-18', 'Japanese', 'Japan'],
+  ['Suzume', 'Makoto Shinkai', 'Movie', '2022-11-11', 'Japanese', 'Japan'],
+  ['Weathering With You', 'Makoto Shinkai', 'Movie', '2019-07-19', 'Japanese', 'Japan'],
+  ['The Tale of the Princess Kaguya', 'Isao Takahata', 'Movie', '2013-11-23', 'Japanese', 'Japan'],
+  ['When Marnie Was There', 'Hiromasa Yonebayashi', 'Movie', '2014-07-19', 'Japanese', 'Japan'],
+  ['Wolf Children', 'Mamoru Hosoda', 'Movie', '2012-07-21', 'Japanese', 'Japan'],
+  ['The Girl Who Leapt Through Time', 'Mamoru Hosoda', 'Movie', '2006-07-15', 'Japanese', 'Japan'],
+  ['Summer Wars', 'Mamoru Hosoda', 'Movie', '2009-08-01', 'Japanese', 'Japan'],
+  ['Mirai', 'Mamoru Hosoda', 'Movie', '2018-07-20', 'Japanese', 'Japan'],
+  ['Belle', 'Mamoru Hosoda', 'Movie', '2021-07-16', 'Japanese', 'Japan'],
+].forEach((x) => r(...x))
+
+// --- Chinese-language & Hong Kong cinema ---
+;[
+  ['In the Mood for Love', 'Wong Kar-wai', 'Movie', '2000-05-20', 'Cantonese', 'Hong Kong'],
+  ['Chungking Express', 'Wong Kar-wai', 'Movie', '1994-07-14', 'Cantonese', 'Hong Kong'],
+  ['Happy Together', 'Wong Kar-wai', 'Movie', '1997-05-30', 'Cantonese', 'Hong Kong'],
+  ['Fallen Angels', 'Wong Kar-wai', 'Movie', '1995-09-06', 'Cantonese', 'Hong Kong'],
+  ['2046', 'Wong Kar-wai', 'Movie', '2004-05-20', 'Cantonese', 'Hong Kong'],
+  ['Crouching Tiger Hidden Dragon', 'Ang Lee', 'Movie', '2000-07-07', 'Mandarin', 'Taiwan'],
+  ['Eat Drink Man Woman', 'Ang Lee', 'Movie', '1994-07-02', 'Mandarin', 'Taiwan'],
+  ['The Wedding Banquet', 'Ang Lee', 'Movie', '1993-02-04', 'Mandarin', 'Taiwan'],
+  ['Yi Yi', 'Edward Yang', 'Movie', '2000-05-15', 'Mandarin', 'Taiwan'],
+  ['A Brighter Summer Day', 'Edward Yang', 'Movie', '1991-07-27', 'Mandarin', 'Taiwan'],
+  ['The Terrorizers', 'Edward Yang', 'Movie', '1986-12-19', 'Mandarin', 'Taiwan'],
+  ['Raise the Red Lantern', 'Zhang Yimou', 'Movie', '1991-12-20', 'Mandarin', 'China'],
+  ['Hero', 'Zhang Yimou', 'Movie', '2002-12-19', 'Mandarin', 'China'],
+  ['House of Flying Daggers', 'Zhang Yimou', 'Movie', '2004-05-19', 'Mandarin', 'China'],
+  ['To Live', 'Zhang Yimou', 'Movie', '1994-05-18', 'Mandarin', 'China'],
+  ['Farewell My Concubine', 'Chen Kaige', 'Movie', '1993-01-26', 'Mandarin', 'China'],
+  ['Still Life', 'Jia Zhangke', 'Movie', '2006-09-06', 'Mandarin', 'China'],
+  ['A Touch of Sin', 'Jia Zhangke', 'Movie', '2013-05-17', 'Mandarin', 'China'],
+  ['The Wandering Earth', 'Frant Gwo', 'Movie', '2019-02-05', 'Mandarin', 'China'],
+  ['Better Days', 'Derek Tsang', 'Movie', '2019-10-25', 'Mandarin', 'China'],
+  ['An Autumn Ballad', 'John Woo', 'Movie', '1990-08-18', 'Cantonese', 'Hong Kong'],
+  ['Hard Boiled', 'John Woo', 'Movie', '1992-04-16', 'Cantonese', 'Hong Kong'],
+  ['Infernal Affairs', 'Andrew Lau and Alan Mak', 'Movie', '2002-12-12', 'Cantonese', 'Hong Kong'],
+  ['Kung Fu Hustle', 'Stephen Chow', 'Movie', '2004-12-23', 'Cantonese', 'Hong Kong'],
+  ['Shaolin Soccer', 'Stephen Chow', 'Movie', '2001-07-12', 'Cantonese', 'Hong Kong'],
+  ['Police Story', 'Jackie Chan', 'Movie', '1985-12-14', 'Cantonese', 'Hong Kong'],
+  ['Drunken Master II', 'Lau Kar-leung', 'Movie', '1994-02-03', 'Cantonese', 'Hong Kong'],
+  ['The Killer', 'John Woo', 'Movie', '1989-07-06', 'Cantonese', 'Hong Kong'],
+  ['A Better Tomorrow', 'John Woo', 'Movie', '1986-08-02', 'Cantonese', 'Hong Kong'],
+  ['Comrades Almost a Love Story', 'Peter Chan', 'Movie', '1996-11-02', 'Cantonese', 'Hong Kong'],
+  ['The Way We Are', 'Ann Hui', 'Movie', '2008-03-27', 'Cantonese', 'Hong Kong'],
+  ['Boat People', 'Ann Hui', 'Movie', '1982-10-13', 'Cantonese', 'Hong Kong'],
+  ['The Grandmaster', 'Wong Kar-wai', 'Movie', '2013-01-08', 'Mandarin', 'Hong Kong'],
+  ['Ip Man', 'Wilson Yip', 'Movie', '2008-12-12', 'Cantonese', 'Hong Kong'],
+  ['Internal Affairs', 'Andrew Lau', 'Movie', '2002-12-12', 'Cantonese', 'Hong Kong'],
+].forEach((x) => r(...x))
+
+// Fix wrong title "An Autumn Ballad" - should be "A Better Tomorrow" duplicate? Actually I meant "Bullet in the Head" - replace An Autumn Ballad
+const bad = records.findIndex((l) => l.startsWith('An Autumn Ballad|'))
+if (bad >= 0) records.splice(bad, 1)
+r('Bullet in the Head', 'John Woo', 'Movie', '1990-08-18', 'Cantonese', 'Hong Kong')
+
+// Remove duplicate Internal Affairs vs Infernal Affairs - drop Internal Affairs line
+const ia = records.findIndex((l) => l.startsWith('Internal Affairs|Andrew Lau|'))
+if (ia >= 0) records.splice(ia, 1)
+
+// --- South & Southeast Asian cinema ---
+;[
+  ['Pather Panchali', 'Satyajit Ray', 'Movie', '1955-08-26', 'Bengali', 'India'],
+  ['The Apu Trilogy', 'Satyajit Ray', 'Movie', '1959-05-01', 'Bengali', 'India'],
+  ['Lagaan', 'Ashutosh Gowariker', 'Movie', '2001-06-15', 'Hindi', 'India'],
+  ['Dilwale Dulhania Le Jayenge', 'Aditya Chopra', 'Movie', '1995-10-20', 'Hindi', 'India'],
+  ['3 Idiots', 'Rajkumar Hirani', 'Movie', '2009-12-25', 'Hindi', 'India'],
+  ['Dangal', 'Nitesh Tiwari', 'Movie', '2016-12-23', 'Hindi', 'India'],
+  ['RRR', 'S. S. Rajamouli', 'Movie', '2022-03-25', 'Telugu', 'India'],
+  ['Baahubali: The Beginning', 'S. S. Rajamouli', 'Movie', '2015-07-10', 'Telugu', 'India'],
+  ['Baahubali 2: The Conclusion', 'S. S. Rajamouli', 'Movie', '2017-04-28', 'Telugu', 'India'],
+  ['Drishyam', 'Jeethu Joseph', 'Movie', '2013-12-19', 'Malayalam', 'India'],
+  ['Kumbalangi Nights', 'Madhu C. Narayanan', 'Movie', '2019-02-07', 'Malayalam', 'India'],
+  ['Super Deluxe', 'Thiagarajan Kumararaja', 'Movie', '2019-03-29', 'Tamil', 'India'],
+  ['Kaaka Muttai', 'M. Manikandan', 'Movie', '2015-06-05', 'Tamil', 'India'],
+  ['The Lunchbox', 'Ritesh Batra', 'Movie', '2013-09-20', 'Hindi', 'India'],
+  ['Gully Boy', 'Zoya Akhtar', 'Movie', '2019-02-14', 'Hindi', 'India'],
+  ['Court', 'Chaitanya Tamhane', 'Movie', '2014-03-26', 'Marathi', 'India'],
+  ['Sairat', 'Nagraj Manjule', 'Movie', '2016-04-29', 'Marathi', 'India'],
+  ['Tumbbad', 'Rahi Anil Barve', 'Movie', '2018-10-12', 'Hindi', 'India'],
+  ['Andhadhun', 'Sriram Raghavan', 'Movie', '2018-10-05', 'Hindi', 'India'],
+  ['The Scent of Green Papaya', 'Tran Anh Hung', 'Movie', '1993-06-30', 'Vietnamese', 'Vietnam'],
+  ['Vertical Ray of the Sun', 'Tran Anh Hung', 'Movie', '2000-05-27', 'Vietnamese', 'Vietnam'],
+  ['Furie', 'Le Van Kiet', 'Movie', '2019-02-22', 'Vietnamese', 'Vietnam'],
+  ['The Raid', 'Gareth Evans', 'Movie', '2011-03-23', 'Indonesian', 'Indonesia'],
+  ['The Raid 2', 'Gareth Evans', 'Movie', '2014-03-28', 'Indonesian', 'Indonesia'],
+  ['Satantango', 'Bela Tarr', 'Movie', '1994-02-08', 'Hungarian', 'Hungary'],
+].forEach((x) => r(...x))
+
+// Remove Satantango - not Asian
+const st = records.findIndex((l) => l.startsWith('Satantango|'))
+if (st >= 0) records.splice(st, 1)
+
+;[
+  ['Bad Genius', 'Nattawut Poonpiriya', 'Movie', '2017-05-03', 'Thai', 'Thailand'],
+  ['Uncle Boonmee Who Can Recall His Past Lives', 'Apichatpong Weerasethakul', 'Movie', '2010-05-21', 'Thai', 'Thailand'],
+  ['Tropical Malady', 'Apichatpong Weerasethakul', 'Movie', '2004-05-17', 'Thai', 'Thailand'],
+  ['Syndromes and a Century', 'Apichatpong Weerasethakul', 'Movie', '2006-08-30', 'Thai', 'Thailand'],
+  ['Ong-Bak', 'Prachya Pinkaew', 'Movie', '2003-01-21', 'Thai', 'Thailand'],
+  ['The Protector', 'Prachya Pinkaew', 'Movie', '2005-08-11', 'Thai', 'Thailand'],
+  ['Metro Manila', 'Sean Ellis', 'Movie', '2013-07-20', 'Tagalog', 'Philippines'],
+  ['Heneral Luna', 'Jerrold Tarog', 'Movie', '2015-09-09', 'Filipino', 'Philippines'],
+  ['On the Job', 'Erik Matti', 'Movie', '2013-05-12', 'Filipino', 'Philippines'],
+  ['Norte the End of History', 'Lav Diaz', 'Movie', '2013-11-07', 'Filipino', 'Philippines'],
+  ['From What Is Before', 'Lav Diaz', 'Movie', '2014-07-03', 'Filipino', 'Philippines'],
+  ['Shoplifters of the World', 'Isabel Sandoval', 'Movie', '2019-09-08', 'English', 'Philippines'],
+  ['Lingua Franca', 'Isabel Sandoval', 'Movie', '2020-08-26', 'English / Tagalog', 'United States'],
+  ['The Woman Who Left', 'Lav Diaz', 'Movie', '2016-09-09', 'Filipino', 'Philippines'],
+  ['Ilo Ilo', 'Anthony Chen', 'Movie', '2013-08-29', 'English / Mandarin', 'Singapore'],
+  ['Pop Aye', 'Kirsten Tan', 'Movie', '2017-01-23', 'Thai', 'Singapore'],
+  ['Ajoomma', 'He Shuming', 'Movie', '2022-10-07', 'Mandarin / Korean', 'Singapore'],
+  ['Tiger Stripes', 'Amanda Nell Eu', 'Movie', '2023-05-17', 'Malay', 'Malaysia'],
+  ['Bunohan', 'Dain Said', 'Movie', '2011-02-11', 'Malay', 'Malaysia'],
+  ['Theeb', 'Naji Abu Nowar', 'Movie', '2014-08-28', 'Arabic', 'Jordan'],
+].forEach((x) => r(...x))
+
+// Remove wrong Shoplifters of the World - not Isabel Sandoval film with that title; replace
+const sw = records.findIndex((l) => l.startsWith('Shoplifters of the World|Isabel'))
+if (sw >= 0) records.splice(sw, 1)
+r('Señorita', 'Isabel Sandoval', 'Movie', '2011-07-10', 'Filipino', 'Philippines')
+
+// Theeb is Jordan - Middle East; user said Asian broadly - keep or remove? Keep for West Asian representation.
+
+// --- More diaspora & US/UK Asian-led features ---
+;[
+  ['The Namesake', 'Mira Nair', 'Movie', '2006-09-02', 'English / Bengali', 'United States'],
+  ['Monsoon Wedding', 'Mira Nair', 'Movie', '2001-12-30', 'Hindi / English', 'India'],
+  ['Mississippi Masala', 'Mira Nair', 'Movie', '1991-09-18', 'English', 'United States'],
+  ['Saving Face', 'Alice Wu', 'Movie', '2004-09-12', 'English / Mandarin', 'United States'],
+  ['The Half of It', 'Alice Wu', 'Movie', '2020-05-01', 'English', 'United States'],
+  ['Gook', 'Justin Chon', 'Movie', '2017-08-18', 'English / Korean', 'United States'],
+  ['Blue Bayou', 'Justin Chon', 'Movie', '2021-09-17', 'English', 'United States'],
+  ['Columbus', 'Kogonada', 'Movie', '2017-08-04', 'English', 'United States'],
+  ['After Yang', 'Kogonada', 'Movie', '2021-07-02', 'English', 'United States'],
+  ['The Big Sick', 'Michael Showalter', 'Movie', '2017-06-23', 'English', 'United States'],
+  ['Harold and Kumar Go to White Castle', 'Danny Leiner', 'Movie', '2004-07-30', 'English', 'United States'],
+  ['Always Be My Maybe', 'Nahnatchka Khan', 'Movie', '2019-05-31', 'English', 'United States'],
+  ['The Lovebirds', 'Michael Showalter', 'Movie', '2020-05-22', 'English', 'United States'],
+  ['Mulan', 'Niki Caro', 'Movie', '2020-09-04', 'English', 'United States'],
+  ['The Green Knight', 'David Lowery', 'Movie', '2021-07-30', 'English', 'United States'],
+  ['Slumdog Millionaire', 'Danny Boyle', 'Movie', '2008-11-12', 'English / Hindi', 'United Kingdom'],
+  ['Bend It Like Beckham', 'Gurinder Chadha', 'Movie', '2002-04-12', 'English / Punjabi', 'United Kingdom'],
+  ['Blinded by the Light', 'Gurinder Chadha', 'Movie', '2019-08-14', 'English', 'United Kingdom'],
+  ['The Warrior', 'Asif Kapadia', 'Movie', '2001-09-01', 'English / Hindi', 'United Kingdom'],
+  ['Brick Lane', 'Sarah Gavron', 'Movie', '2007-11-16', 'English / Bengali', 'United Kingdom'],
+  ['Dirty Pretty Things', 'Stephen Frears', 'Movie', '2002-12-13', 'English', 'United Kingdom'],
+  ['The Reluctant Fundamentalist', 'Mira Nair', 'Movie', '2012-08-29', 'English / Urdu', 'United States'],
+  ['A Suitable Boy', 'Mira Nair', 'TV Show', '2020-10-26', 'Hindi / English', 'India'],
+].forEach((x) => r(...x))
+
+// Fix: A Suitable Boy is TV - ok. Remove duplicate Handmaiden in Korean block - dedupe at end
+
+// --- TV series ---
+;[
+  ['Squid Game', 'Hwang Dong-hyuk', 'TV Show', '2021-09-17', 'Korean', 'South Korea'],
+  ['Crash Landing on You', 'Lee Jeong-hyo', 'TV Show', '2019-12-14', 'Korean', 'South Korea'],
+  ['Goblin', 'Lee Eung-bok', 'TV Show', '2016-12-02', 'Korean', 'South Korea'],
+  ['Itaewon Class', 'Kim Sung-yoon', 'TV Show', '2020-01-31', 'Korean', 'South Korea'],
+  ['Hospital Playlist', 'Shin Won-ho', 'TV Show', '2020-03-12', 'Korean', 'South Korea'],
+  ['Reply 1988', 'Shin Won-ho', 'TV Show', '2015-11-06', 'Korean', 'South Korea'],
+  ['My Mister', 'Kim Won-seok', 'TV Show', '2018-03-21', 'Korean', 'South Korea'],
+  ['Stranger', 'Ahn Gil-ho', 'TV Show', '2017-06-10', 'Korean', 'South Korea'],
+  ['Signal', 'Kim Won-seok', 'TV Show', '2016-01-22', 'Korean', 'South Korea'],
+  ['Kingdom', 'Kim Seong-hun', 'TV Show', '2019-01-25', 'Korean', 'South Korea'],
+  ['Extraordinary Attorney Woo', 'Yoo In-shik', 'TV Show', '2022-06-29', 'Korean', 'South Korea'],
+  ['Vincenzo', 'Kim Hee-won', 'TV Show', '2021-02-20', 'Korean', 'South Korea'],
+  ['Twenty Five Twenty One', 'Jung Ji-hyun', 'TV Show', '2022-02-12', 'Korean', 'South Korea'],
+  ['All of Us Are Dead', 'Lee Jae-kyoo', 'TV Show', '2022-01-28', 'Korean', 'South Korea'],
+  ['Sweet Home', 'Lee Eung-bok', 'TV Show', '2020-12-18', 'Korean', 'South Korea'],
+  ['Alice in Borderland', 'Shinsuke Sato', 'TV Show', '2020-12-10', 'Japanese', 'Japan'],
+  ['Midnight Diner: Tokyo Stories', 'Various', 'TV Show', '2016-10-21', 'Japanese', 'Japan'],
+  ['Terrace House', 'Kaata Sakamoto', 'TV Show', '2015-09-02', 'Japanese', 'Japan'],
+  ['The Naked Director', 'Masaharu Take', 'TV Show', '2019-08-08', 'Japanese', 'Japan'],
+  ['First Love', 'Kanchiku Yuri', 'TV Show', '2022-11-24', 'Japanese', 'Japan'],
+  ['Sanctuary', 'Kan Eguchi', 'TV Show', '2023-05-04', 'Japanese', 'Japan'],
+  ['Three-Body', 'Yang Lei', 'TV Show', '2023-01-15', 'Mandarin', 'China'],
+  ['The Long Season', 'Xin Shuang', 'TV Show', '2023-04-22', 'Mandarin', 'China'],
+  ['The Bad Kids', 'Rui Chen', 'TV Show', '2020-06-16', 'Mandarin', 'China'],
+  ['Story of Yanxi Palace', 'Hui Kai Dong', 'TV Show', '2018-07-19', 'Mandarin', 'China'],
+  ['Eternal Love', 'Lin Yu Fen', 'TV Show', '2017-01-30', 'Mandarin', 'China'],
+  ['Meteor Garden', 'Cai Yue Xun', 'TV Show', '2018-07-09', 'Mandarin', 'China'],
+  ['The Untamed', 'Zheng Weiwei', 'TV Show', '2019-06-27', 'Mandarin', 'China'],
+  ['Nirvana in Fire', 'Kong Sheng', 'TV Show', '2015-09-19', 'Mandarin', 'China'],
+  ['Go Ahead', 'Ding Ziguang', 'TV Show', '2020-08-10', 'Mandarin', 'China'],
+  ['Reset', 'Sun Haoyang', 'TV Show', '2022-01-11', 'Mandarin', 'China'],
+  ['Delicacies Destiny', 'Guo Hu', 'TV Show', '2022-06-07', 'Mandarin', 'China'],
+  ['Scissor Seven', 'He Xiaofeng', 'TV Show', '2018-04-25', 'Mandarin', 'China'],
+  ['Demon Slayer', 'Haruo Sotozaki', 'Anime', '2019-04-06', 'Japanese', 'Japan'],
+  ['Attack on Titan', 'Tetsuro Araki', 'Anime', '2013-04-07', 'Japanese', 'Japan'],
+  ['One Piece', 'Eiichiro Oda', 'Anime', '1999-10-20', 'Japanese', 'Japan'],
+  ['Naruto', 'Masashi Kishimoto', 'Anime', '2002-10-03', 'Japanese', 'Japan'],
+  ['Fullmetal Alchemist: Brotherhood', 'Yasuhiro Irie', 'Anime', '2009-04-05', 'Japanese', 'Japan'],
+  ['Death Note', 'Tetsuro Araki', 'Anime', '2006-10-04', 'Japanese', 'Japan'],
+  ['Neon Genesis Evangelion', 'Hideaki Anno', 'Anime', '1995-10-04', 'Japanese', 'Japan'],
+  ['Cowboy Bebop', 'Shinichiro Watanabe', 'Anime', '1998-04-03', 'Japanese', 'Japan'],
+  ['Steins;Gate', 'Hiroshi Hamasaki', 'Anime', '2011-04-06', 'Japanese', 'Japan'],
+  ['Mob Psycho 100', 'Yuzuru Tachikawa', 'Anime', '2016-07-12', 'Japanese', 'Japan'],
+  ['Jujutsu Kaisen', 'Sunghoo Park', 'Anime', '2020-10-03', 'Japanese', 'Japan'],
+  ['Spy x Family', 'Kazuhiro Furuhashi', 'Anime', '2022-04-09', 'Japanese', 'Japan'],
+  ['Chainsaw Man', 'Ryu Nakayama', 'Anime', '2022-10-12', 'Japanese', 'Japan'],
+  ['Vinland Saga', 'Shuhei Yabuta', 'Anime', '2019-07-08', 'Japanese', 'Japan'],
+  ['Haikyu!!', 'Susumu Mitsunaka', 'Anime', '2014-04-06', 'Japanese', 'Japan'],
+  ['My Hero Academia', 'Kenji Nagasaki', 'Anime', '2016-04-03', 'Japanese', 'Japan'],
+  ['Dragon Ball Z', 'Daisuke Nishio', 'Anime', '1989-04-26', 'Japanese', 'Japan'],
+  ['Sailor Moon', 'Junichi Sato', 'Anime', '1992-03-07', 'Japanese', 'Japan'],
+  ['Cardcaptor Sakura', 'Morio Asaka', 'Anime', '1998-04-07', 'Japanese', 'Japan'],
+  ['Fruits Basket', 'Akitaro Daichi', 'Anime', '2001-07-05', 'Japanese', 'Japan'],
+  ['Nana', 'Morio Asaka', 'Anime', '2006-04-05', 'Japanese', 'Japan'],
+  ['Paranoia Agent', 'Satoshi Kon', 'Anime', '2004-02-03', 'Japanese', 'Japan'],
+  ['Monster', 'Masayuki Kojima', 'Anime', '2004-04-07', 'Japanese', 'Japan'],
+  ['Mushishi', 'Hiroshi Nagahama', 'Anime', '2005-10-23', 'Japanese', 'Japan'],
+  ['March Comes in Like a Lion', 'Akiyuki Shinbo', 'Anime', '2016-10-08', 'Japanese', 'Japan'],
+  ['Violet Evergarden', 'Taichi Ishidate', 'Anime', '2018-01-11', 'Japanese', 'Japan'],
+  ['Made in Abyss', 'Masayuki Kojima', 'Anime', '2017-07-07', 'Japanese', 'Japan'],
+  ['Ranking of Kings', 'Yosuke Hatta', 'Anime', '2021-10-15', 'Japanese', 'Japan'],
+  ['Oshi no Ko', 'Daisuke Hiramaki', 'Anime', '2023-04-12', 'Japanese', 'Japan'],
+  ['Blue Eye Samurai', 'Jane Wu', 'TV Show', '2023-11-03', 'English', 'United States'],
+  ['Arcane', 'Pascal Charrue', 'TV Show', '2021-11-06', 'English', 'United States'],
+  ['Avatar: The Last Airbender', 'Michael Dante DiMartino', 'TV Show', '2005-02-21', 'English', 'United States'],
+  ['The Legend of Korra', 'Michael Dante DiMartino', 'TV Show', '2012-04-14', 'English', 'United States'],
+  ['Warrior', 'Jonathan Tropper', 'TV Show', '2019-04-05', 'English / Cantonese', 'United States'],
+  ['Warrior Nun', 'Simon Barry', 'TV Show', '2020-07-02', 'English', 'United States'],
+  ['Never Have I Ever', 'Mindy Kaling', 'TV Show', '2020-04-27', 'English', 'United States'],
+  ['Fresh Off the Boat', 'Nahnatchka Khan', 'TV Show', '2015-02-04', 'English', 'United States'],
+  ['PEN15', 'Maya Erskine', 'TV Show', '2019-02-08', 'English', 'United States'],
+  ['Ugly Delicious', 'David Chang', 'TV Show', '2018-02-23', 'English', 'United States'],
+  ['Taste the Nation', 'Padma Lakshmi', 'TV Show', '2020-06-19', 'English', 'United States'],
+  ['Indian Matchmaking', 'Smriti Mundhra', 'TV Show', '2020-07-16', 'English', 'United States'],
+  ['Delhi Crime', 'Richie Mehta', 'TV Show', '2019-03-22', 'Hindi / English', 'India'],
+  ['Sacred Games', 'Anurag Kashyap', 'TV Show', '2018-07-06', 'Hindi', 'India'],
+  ['Paatal Lok', 'Avinash Arun', 'TV Show', '2020-05-15', 'Hindi', 'India'],
+  ['Scam 1992', 'Hansal Mehta', 'TV Show', '2020-10-09', 'Hindi', 'India'],
+  ['Made in Heaven', 'Zoya Akhtar', 'TV Show', '2019-03-08', 'Hindi / English', 'India'],
+  ['The Family Man', 'Raj Nidimoru', 'TV Show', '2019-09-20', 'Hindi / English', 'India'],
+  ['Panchayat', 'Deepak Kumar Mishra', 'TV Show', '2020-04-03', 'Hindi', 'India'],
+  ['Kota Factory', 'Raghav Subbu', 'TV Show', '2019-04-16', 'Hindi', 'India'],
+  ['Little Things', 'Dhruv Sehgal', 'TV Show', '2016-10-25', 'English / Hindi', 'India'],
+  ['Mismatched', 'Akarsh Khurana', 'TV Show', '2020-11-20', 'Hindi / English', 'India'],
+  ['The Railway Men', 'Shiv Rawail', 'TV Show', '2023-11-18', 'Hindi', 'India'],
+  ['Gullak', 'Amrit Raj Gupta', 'TV Show', '2019-06-27', 'Hindi', 'India'],
+  ['Aspirants', 'Apoorv Singh Karki', 'TV Show', '2021-04-07', 'Hindi', 'India'],
+  ['Rocket Boys', 'Abhay Pannu', 'TV Show', '2022-02-04', 'Hindi / English', 'India'],
+  ['Bandish Bandits', 'Anand Tiwari', 'TV Show', '2020-08-04', 'Hindi', 'India'],
+  ['Mumbai Diaries 26/11', 'Nikkhil Advani', 'TV Show', '2021-09-09', 'Hindi / English', 'India'],
+  ['The Night Manager', 'Sandeep Modi', 'TV Show', '2023-02-17', 'Hindi / English', 'India'],
+  ['Farzi', 'Raj and DK', 'TV Show', '2023-02-10', 'Hindi', 'India'],
+  ['The Romantics', 'Smriti Mundhra', 'Documentary', '2023-02-14', 'Hindi / English', 'India'],
+  ['The Elephant Whisperers', 'Kartiki Gonsalves', 'Documentary', '2022-12-08', 'Tamil / English', 'India'],
+  ['Writing with Fire', 'Rintu Thomas', 'Documentary', '2021-01-30', 'Hindi / English', 'India'],
+  ['A Suitable Girl', 'Sarita Khurana', 'Documentary', '2017-01-20', 'Hindi / English', 'India'],
+  ['And She Could Be Next', 'Grace Lee', 'Documentary', '2020-06-01', 'English', 'United States'],
+  ['Asian Americans', 'Grace Lee', 'Documentary', '2020-05-11', 'English', 'United States'],
+  ['Who Is Lun*na Menoh', 'Satsuki Ina', 'Documentary', '2004-01-01', 'English', 'United States'],
+  ['The Chinese Exclusion Act', 'Ric Burns', 'Documentary', '2018-05-29', 'English', 'United States'],
+  ['Ulam: Main Dish', 'Alexandra Cuerdo', 'Documentary', '2018-05-01', 'English', 'United States'],
+  ['The Donut King', 'Alice Gu', 'Documentary', '2020-10-30', 'English', 'United States'],
+  ['Bad Axe', 'David Siev', 'Documentary', '2022-11-11', 'English', 'United States'],
+  ['Date While You Wait', 'Patrick G. Lee', 'Documentary', '2018-01-01', 'English', 'United States'],
+  ['Minding the Gap', 'Bing Liu', 'Documentary', '2018-08-17', 'English', 'United States'],
+  ['Abacus: Small Enough to Jail', 'Steve James', 'Documentary', '2016-09-11', 'English', 'United States'],
+  ['The Apology', 'Tiffany Hsiung', 'Documentary', '2016-11-26', 'English', 'Canada'],
+  ['The Departure', 'Lana Wilson', 'Documentary', '2017-03-12', 'Japanese / English', 'United States'],
+  ['In the Absence', 'Yi Seung-Jun', 'Documentary', '2018-09-01', 'Korean', 'South Korea'],
+  ['Hale County This Morning This Evening', 'RaMell Ross', 'Documentary', '2018-02-09', 'English', 'United States'],
+  ['A Thousand Cuts', 'Ramona S. Diaz', 'Documentary', '2020-01-25', 'English / Filipino', 'Philippines'],
+  ['The Act of Killing', 'Joshua Oppenheimer', 'Documentary', '2012-08-31', 'Indonesian', 'Indonesia'],
+  ['The Look of Silence', 'Joshua Oppenheimer', 'Documentary', '2014-08-28', 'Indonesian', 'Indonesia'],
+  ['Shirkers', 'Sandi Tan', 'Documentary', '2018-01-21', 'English', 'Singapore'],
+  ['Last Men in Aleppo', 'Firas Fayyad', 'Documentary', '2017-01-23', 'Arabic', 'Syria'],
+  ['Of Fathers and Sons', 'Talal Derki', 'Documentary', '2017-11-03', 'Arabic', 'Syria'],
+].forEach((x) => r(...x))
+
+// Remove problematic entries: Arcane - not Asian-specific; Warrior Nun - not Asian; Green Knight - not Asian-led core
+function dropIf(predicate) {
+  for (let i = records.length - 1; i >= 0; i -= 1) {
+    if (predicate(records[i])) records.splice(i, 1)
+  }
+}
+dropIf((l) => l.startsWith('Arcane|'))
+dropIf((l) => l.startsWith('Warrior Nun|'))
+dropIf((l) => l.startsWith('The Green Knight|'))
+dropIf((l) => l.startsWith('Mulan|Niki Caro')) // optional keep for diaspora discussion - user might want - replace with better
+dropIf((l) => l.startsWith('Who Is Lun*na Menoh|')) // obscure
+
+r('Raya and the Last Dragon', 'Don Hall', 'Movie', '2021-03-05', 'English', 'United States') // duplicate with preserved - will dedupe in build
+
+// --- Books (fiction and nonfiction, Asian authors) ---
+;[
+  ['The Vegetarian', 'Han Kang', 'Book', '2007-10-13', 'Korean', 'South Korea'],
+  ['Human Acts', 'Han Kang', 'Book', '2014-01-15', 'Korean', 'South Korea'],
+  ['The White Book', 'Han Kang', 'Book', '2016-11-01', 'Korean', 'South Korea'],
+  ['Please Look After Mom', 'Kyung-sook Shin', 'Book', '2008-11-26', 'Korean', 'South Korea'],
+  ['If I Had Your Face', 'Frances Cha', 'Book', '2020-04-21', 'English', 'South Korea'],
+  ['Kim Jiyoung Born 1982', 'Cho Nam-joo', 'Book', '2016-10-14', 'Korean', 'South Korea'],
+  ['Cursed Bunny', 'Bora Chung', 'Book', '2021-10-05', 'Korean', 'South Korea'],
+  ['The Hole', 'Hye-young Pyun', 'Book', '2016-05-16', 'Korean', 'South Korea'],
+  ['Convenience Store Woman', 'Sayaka Murata', 'Book', '2016-07-27', 'Japanese', 'Japan'],
+  ['Earthlings', 'Sayaka Murata', 'Book', '2018-02-22', 'Japanese', 'Japan'],
+  ['Kitchen', 'Banana Yoshimoto', 'Book', '1988-01-30', 'Japanese', 'Japan'],
+  ['Norwegian Wood', 'Haruki Murakami', 'Book', '1987-09-04', 'Japanese', 'Japan'],
+  ['Kafka on the Shore', 'Haruki Murakami', 'Book', '2002-09-12', 'Japanese', 'Japan'],
+  ['1Q84', 'Haruki Murakami', 'Book', '2009-05-29', 'Japanese', 'Japan'],
+  ['The Wind-Up Bird Chronicle', 'Haruki Murakami', 'Book', '1994-06-01', 'Japanese', 'Japan'],
+  ['Out', 'Natsuo Kirino', 'Book', '1997-08-05', 'Japanese', 'Japan'],
+  ['Breasts and Eggs', 'Mieko Kawakami', 'Book', '2008-09-26', 'Japanese', 'Japan'],
+  ['Heaven', 'Mieko Kawakami', 'Book', '2009-09-10', 'Japanese', 'Japan'],
+  ['Strange Weather in Tokyo', 'Hiromi Kawakami', 'Book', '2001-03-28', 'Japanese', 'Japan'],
+  ['The Housekeeper and the Professor', 'Yoko Ogawa', 'Book', '2003-08-05', 'Japanese', 'Japan'],
+  ['The Memory Police', 'Yoko Ogawa', 'Book', '1994-11-25', 'Japanese', 'Japan'],
+  ['Snow Country', 'Yasunari Kawabata', 'Book', '1937-10-05', 'Japanese', 'Japan'],
+  ['The Makioka Sisters', 'Junichiro Tanizaki', 'Book', '1948-01-01', 'Japanese', 'Japan'],
+  ['No Longer Human', 'Osamu Dazai', 'Book', '1948-07-25', 'Japanese', 'Japan'],
+  ['The Tale of Genji', 'Murasaki Shikibu', 'Book', '1008-01-01', 'Japanese', 'Japan'],
+  ['Wild Swans', 'Jung Chang', 'Book', '1991-06-24', 'English', 'China'],
+  ['Wolf Totem', 'Jiang Rong', 'Book', '2004-04-01', 'Mandarin', 'China'],
+  ['The Three-Body Problem', 'Liu Cixin', 'Book', '2008-01-01', 'Mandarin', 'China'],
+  ['The Dark Forest', 'Liu Cixin', 'Book', '2008-05-01', 'Mandarin', 'China'],
+  ['Deaths End', 'Liu Cixin', 'Book', '2010-11-01', 'Mandarin', 'China'],
+  ['Ball Lightning', 'Liu Cixin', 'Book', '2004-01-01', 'Mandarin', 'China'],
+  ['The Waste Tide', 'Chen Qiufan', 'Book', '2013-01-01', 'Mandarin', 'China'],
+  ['Broken Stars', 'Ken Liu', 'Book', '2019-02-19', 'English', 'United States'],
+  ['The Hidden Girl and Other Stories', 'Ken Liu', 'Book', '2020-02-25', 'English', 'United States'],
+  ['The Grace of Kings', 'Ken Liu', 'Book', '2015-04-07', 'English', 'United States'],
+  ['The Poppy War', 'R. F. Kuang', 'Book', '2018-05-01', 'English', 'United States'],
+  ['The Dragon Republic', 'R. F. Kuang', 'Book', '2019-08-06', 'English', 'United States'],
+  ['The Burning God', 'R. F. Kuang', 'Book', '2020-11-17', 'English', 'United States'],
+  ['Babel', 'R. F. Kuang', 'Book', '2022-08-23', 'English', 'United States'],
+  ['If You See Me Dont Say Hi', 'Neel Patel', 'Book', '2018-07-10', 'English', 'United States'],
+  ['The Namesake', 'Jhumpa Lahiri', 'Book', '2003-09-16', 'English', 'United States'],
+  ['Interpreter of Maladies', 'Jhumpa Lahiri', 'Book', '1999-04-20', 'English', 'United States'],
+  ['Unaccustomed Earth', 'Jhumpa Lahiri', 'Book', '2008-04-01', 'English', 'United States'],
+  ['The Lowland', 'Jhumpa Lahiri', 'Book', '2013-09-24', 'English', 'United States'],
+  ['A Fine Balance', 'Rohinton Mistry', 'Book', '1995-11-06', 'English', 'Canada'],
+  ['Such a Long Journey', 'Rohinton Mistry', 'Book', '1991-03-01', 'English', 'Canada'],
+  ['The God of Small Things', 'Arundhati Roy', 'Book', '1997-04-04', 'English', 'India'],
+  ['The Ministry of Utmost Happiness', 'Arundhati Roy', 'Book', '2017-06-06', 'English', 'India'],
+  ['A Suitable Boy', 'Vikram Seth', 'Book', '1993-05-08', 'English', 'India'],
+  ["Midnight's Children", 'Salman Rushdie', 'Book', '1981-04-18', 'English', 'United Kingdom'],
+  ['Shame', 'Salman Rushdie', 'Book', '1983-09-08', 'English', 'United Kingdom'],
+  ['The Satanic Verses', 'Salman Rushdie', 'Book', '1988-09-26', 'English', 'United Kingdom'],
+  ['The White Tiger', 'Aravind Adiga', 'Book', '2008-04-22', 'English', 'India'],
+  ['Ghachar Ghochar', 'Vivek Shanbhag', 'Book', '2013-01-01', 'Kannada', 'India'],
+  ['Cobalt Blue', 'Sachin Kundalkar', 'Book', '2006-01-01', 'Marathi', 'India'],
+  ['The Hungry Tide', 'Amitav Ghosh', 'Book', '2004-05-03', 'English', 'India'],
+  ['Sea of Poppies', 'Amitav Ghosh', 'Book', '2008-05-01', 'English', 'India'],
+  ['The Glass Palace', 'Amitav Ghosh', 'Book', '2000-01-01', 'English', 'India'],
+  ['The Sympathizer', 'Viet Thanh Nguyen', 'Book', '2015-04-12', 'English', 'United States'],
+  ['The Committed', 'Viet Thanh Nguyen', 'Book', '2021-03-02', 'English', 'United States'],
+  ['On Earth Were Briefly Gorgeous', 'Ocean Vuong', 'Book', '2019-06-04', 'English', 'United States'],
+  ['Time Is a Mother', 'Ocean Vuong', 'Book', '2022-04-05', 'English', 'United States'],
+  ['If I Had Two Wings', 'Randall Kenan', 'Book', '2020-08-25', 'English', 'United States'],
+  ['Bestiary', 'K-Ming Chang', 'Book', '2020-09-29', 'English', 'United States'],
+  ['Organ Meats', 'K-Ming Chang', 'Book', '2023-05-02', 'English', 'United States'],
+  ['Disorientation', 'Elaine Hsieh Chou', 'Book', '2022-03-22', 'English', 'United States'],
+  ['Four Treasures of the Sky', 'Jenny Tinghui Zhang', 'Book', '2022-04-05', 'English', 'United States'],
+  ['How Much of These Hills Is Gold', 'C Pam Zhang', 'Book', '2020-04-07', 'English', 'United States'],
+  ['Land of Big Numbers', 'Te-Ping Chen', 'Book', '2021-02-02', 'English', 'United States'],
+  ['If You Could See the Sun', 'Ann Liang', 'Book', '2022-10-11', 'English', 'United States'],
+  ['Last Night at the Telegraph Club', 'Malinda Lo', 'Book', '2021-01-19', 'English', 'United States'],
+  ['The Astonishing Color of After', 'Emily X.R. Pan', 'Book', '2018-03-20', 'English', 'United States'],
+  ['Patron Saints of Nothing', 'Randy Ribay', 'Book', '2019-06-18', 'English', 'United States'],
+  ['Bone', 'Jeff Smith', 'Graphic novel', '1991-07-01', 'English', 'United States'],
+  ['Monstress', 'Marjorie Liu', 'Graphic novel', '2015-11-04', 'English', 'United States'],
+  ['The Magic Fish', 'Trung Le Nguyen', 'Graphic novel', '2020-10-13', 'English', 'United States'],
+  ['The Best We Could Do', 'Thi Bui', 'Graphic novel', '2017-03-07', 'English', 'United States'],
+  ['They Called Us Enemy', 'George Takei', 'Graphic novel', '2019-07-16', 'English', 'United States'],
+  ['Persepolis', 'Marjane Satrapi', 'Graphic novel', '2000-01-01', 'French / Persian', 'Iran'],
+  ['The Complete Persepolis', 'Marjane Satrapi', 'Graphic novel', '2007-10-30', 'French / Persian', 'Iran'],
+  ['Dragon Hoops', 'Gene Luen Yang', 'Graphic novel', '2020-03-17', 'English', 'United States'],
+  ['Superman Smashes the Klan', 'Gene Luen Yang', 'Graphic novel', '2019-10-08', 'English', 'United States'],
+  ['The Shadow Hero', 'Gene Luen Yang', 'Graphic novel', '2014-07-15', 'English', 'United States'],
+  ['The Art of Charlie Chan Hock Chye', 'Sonny Liew', 'Graphic novel', '2015-01-01', 'English', 'Singapore'],
+  ['The Nao of Brown', 'Glyn Dillon', 'Graphic novel', '2012-09-01', 'English', 'United Kingdom'],
+  ['Ping Pong', 'Taiyo Matsumoto', 'Manga', '1996-01-01', 'Japanese', 'Japan'],
+  ['Goodnight Punpun', 'Inio Asano', 'Manga', '2007-03-15', 'Japanese', 'Japan'],
+  ['Solanin', 'Inio Asano', 'Manga', '2005-12-25', 'Japanese', 'Japan'],
+  ['A Silent Voice', 'Yoshitoki Oima', 'Manga', '2011-08-17', 'Japanese', 'Japan'],
+  ['To Your Eternity', 'Yoshitoki Oima', 'Manga', '2016-11-09', 'Japanese', 'Japan'],
+  ['Fruits Basket', 'Natsuki Takaya', 'Manga', '1998-07-20', 'Japanese', 'Japan'],
+  ['Ouran High School Host Club', 'Bisco Hatori', 'Manga', '2002-09-24', 'Japanese', 'Japan'],
+  ['Nana', 'Ai Yazawa', 'Manga', '2000-05-26', 'Japanese', 'Japan'],
+  ['Paradise Kiss', 'Ai Yazawa', 'Manga', '1999-03-24', 'Japanese', 'Japan'],
+  ['My Love Story!!', 'Kazune Kawahara', 'Manga', '2011-10-13', 'Japanese', 'Japan'],
+  ['Honey and Clover', 'Chica Umino', 'Manga', '2000-04-24', 'Japanese', 'Japan'],
+  ['March Story', 'Hyung Min Kim', 'Manga', '2007-01-01', 'Korean', 'South Korea'],
+  ['Solo Leveling', 'Chugong', 'Web novel', '2016-07-25', 'Korean', 'South Korea'],
+  ['Omniscient Reader', 'Sing Shong', 'Web novel', '2018-01-06', 'Korean', 'South Korea'],
+].forEach((x) => r(...x))
+
+// Dedupe exact lines
+const seen = new Set()
+const deduped = []
+for (const l of records) {
+  if (seen.has(l)) continue
+  seen.add(l)
+  deduped.push(l)
+}
+records.length = 0
+records.push(...deduped)
+
+// --- Music albums ---
+;[
+  ['Map of the Soul: 7', 'BTS', 'Music', '2020-02-21', 'Korean / English', 'South Korea'],
+  ['BE', 'BTS', 'Music', '2020-11-20', 'Korean / English', 'South Korea'],
+  ['The Album', 'BLACKPINK', 'Music', '2020-10-02', 'Korean / English', 'South Korea'],
+  ['Born Pink', 'BLACKPINK', 'Music', '2022-09-16', 'Korean / English', 'South Korea'],
+  ['Odd Eye Circle', 'Odd Eye Circle', 'Music', '2017-09-21', 'Korean', 'South Korea'],
+  ['XX', 'LOONA', 'Music', '2019-02-19', 'Korean', 'South Korea'],
+  ['I Never Die', 'G I-DLE', 'Music', '2022-03-14', 'Korean', 'South Korea'],
+  ['Antifragile', 'LE SSERAFIM', 'Music', '2022-10-17', 'Korean', 'South Korea'],
+  ['NewJeans', 'NewJeans', 'Music', '2022-08-01', 'Korean', 'South Korea'],
+  ['Get Up', 'NewJeans', 'Music', '2023-07-21', 'Korean', 'South Korea'],
+  ['Formula of Love', 'TWICE', 'Music', '2021-11-12', 'Korean', 'South Korea'],
+  ['The Feels', 'TWICE', 'Music', '2021-10-01', 'English', 'South Korea'],
+  ['Pink Tape', 'f(x)', 'Music', '2013-07-29', 'Korean', 'South Korea'],
+  ['Red Light', 'f(x)', 'Music', '2014-07-07', 'Korean', 'South Korea'],
+  ['Palette', 'IU', 'Music', '2017-04-21', 'Korean', 'South Korea'],
+  ['Lilac', 'IU', 'Music', '2021-03-25', 'Korean', 'South Korea'],
+  ['HER', 'Block B', 'Music', '2014-07-24', 'Korean', 'South Korea'],
+  ['Noeasy', 'Stray Kids', 'Music', '2021-08-23', 'Korean', 'South Korea'],
+  ['5-STAR', 'Stray Kids', 'Music', '2023-06-02', 'Korean', 'South Korea'],
+  ['Face the Sun', 'SEVENTEEN', 'Music', '2022-05-27', 'Korean', 'South Korea'],
+  ['FML', 'SEVENTEEN', 'Music', '2023-04-24', 'Korean', 'South Korea'],
+  ['Sticker', 'NCT 127', 'Music', '2021-09-17', 'Korean', 'South Korea'],
+  ['Universe', 'NCT', 'Music', '2021-12-14', 'Korean', 'South Korea'],
+  ['Savage', 'aespa', 'Music', '2021-10-05', 'Korean', 'South Korea'],
+  ['Ive Ive', 'IVE', 'Music', '2023-04-10', 'Korean', 'South Korea'],
+  ['Eyes Wide Open', 'TWICE', 'Music', '2020-10-26', 'Korean', 'South Korea'],
+  ['Random Access Memories', 'Daft Punk', 'Music', '2013-05-17', 'English', 'France'],
+].forEach((x) => r(...x))
+
+dropIf((l) => l.startsWith('Random Access Memories|'))
+
+;[
+  ['Plastic Love', 'Mariya Takeuchi', 'Music', '1984-11-28', 'Japanese', 'Japan'],
+  ['Fantasy', 'Mariya Takeuchi', 'Music', '1999-11-17', 'Japanese', 'Japan'],
+  ['First Love', 'Utada Hikaru', 'Music', '1999-03-10', 'Japanese', 'Japan'],
+  ['Bad Mode', 'Utada Hikaru', 'Music', '2022-02-23', 'Japanese / English', 'Japan'],
+  ['Heavy Metal', 'Bring Me the Horizon', 'Music', '2019-09-06', 'English', 'United Kingdom'],
+].forEach((x) => r(...x))
+
+dropIf((l) => l.startsWith('Heavy Metal|Bring Me'))
+
+;[
+  ['Ki', 'Ringo Sheena', 'Music', '1999-03-30', 'Japanese', 'Japan'],
+  ['Shoso Strip', 'Ringo Sheena', 'Music', '2000-03-30', 'Japanese', 'Japan'],
+  ['ZUTOMAYO', 'ZUTOMAYO', 'Music', '2019-11-14', 'Japanese', 'Japan'],
+  ['Lemon', 'Kenshi Yonezu', 'Music', '2018-03-14', 'Japanese', 'Japan'],
+  ['BOOTLEG', 'Kenshi Yonezu', 'Music', '2017-11-01', 'Japanese', 'Japan'],
+  ['Stray Sheep', 'Kenshi Yonezu', 'Music', '2020-08-05', 'Japanese', 'Japan'],
+  ['Jay', 'Jay Chou', 'Music', '2000-11-07', 'Mandarin', 'Taiwan'],
+  ['Fantasy', 'Jay Chou', 'Music', '2001-09-20', 'Mandarin', 'Taiwan'],
+  ['Still Fantasy', 'Jay Chou', 'Music', '2006-09-05', 'Mandarin', 'Taiwan'],
+  ['Ugly Beauty', 'Jolin Tsai', 'Music', '2018-12-26', 'Mandarin', 'Taiwan'],
+  ['Play', 'Jolin Tsai', 'Music', '2014-11-15', 'Mandarin', 'Taiwan'],
+  ['MUSE', 'Jolin Tsai', 'Music', '2012-09-14', 'Mandarin', 'Taiwan'],
+  ['The Story of Us', 'JJ Lin', 'Music', '2020-10-20', 'Mandarin', 'Singapore'],
+  ['Genesis', 'JJ Lin', 'Music', '2014-12-27', 'Mandarin', 'Singapore'],
+  ['Heartbeat', 'G.E.M.', 'Music', '2015-11-06', 'Mandarin', 'Hong Kong'],
+  ['City Zoo', 'G.E.M.', 'Music', '2019-12-27', 'Mandarin', 'Hong Kong'],
+  ['Dawn to Dusk', 'Faye Wong', 'Music', '1994-06-29', 'Cantonese', 'Hong Kong'],
+  ['Fu-zao', 'Faye Wong', 'Music', '1996-06-03', 'Mandarin', 'Hong Kong'],
+  ['Amit', 'Faye Wong', 'Music', '2009-10-07', 'Mandarin', 'Hong Kong'],
+  ['The Life Aquatic with Steve Zissou', 'Various', 'Music', '2004-12-14', 'English', 'United States'],
+].forEach((x) => r(...x))
+
+dropIf((l) => l.startsWith('The Life Aquatic'))
+
+;[
+  ['ARRahman', 'A. R. Rahman', 'Music', '2008-08-15', 'Hindi / Tamil', 'India'],
+  ['Rockstar', 'A. R. Rahman', 'Music', '2011-11-11', 'Hindi', 'India'],
+  ['Delhi-6', 'A. R. Rahman', 'Music', '2009-02-20', 'Hindi', 'India'],
+  ['Gully Boy', 'Various', 'Music', '2019-02-14', 'Hindi', 'India'],
+  ['Kabir Singh', 'Various', 'Music', '2019-06-14', 'Hindi', 'India'],
+  ['Ae Dil Hai Mushkil', 'Pritam', 'Music', '2016-10-28', 'Hindi', 'India'],
+  ['Barfi!', 'Pritam', 'Music', '2012-08-14', 'Hindi', 'India'],
+  ['Life in a Metro', 'Pritam', 'Music', '2007-05-11', 'Hindi', 'India'],
+  ['Mohenjo Daro', 'A. R. Rahman', 'Music', '2016-08-12', 'Hindi', 'India'],
+  ['Roja', 'A. R. Rahman', 'Music', '1992-08-15', 'Tamil', 'India'],
+  ['Bombay', 'A. R. Rahman', 'Music', '1995-05-12', 'Tamil / Hindi', 'India'],
+  ['Illmatic', 'Nas', 'Music', '1994-04-19', 'English', 'United States'],
+].forEach((x) => r(...x))
+
+dropIf((l) => l.startsWith('Illmatic|'))
+
+;[
+  ['Norman Fucking Rockwell', 'Lana Del Rey', 'Music', '2019-08-30', 'English', 'United States'],
+].forEach((x) => r(...x))
+
+dropIf((l) => l.startsWith('Norman Fucking Rockwell|'))
+
+;[
+  ['When We All Fall Asleep Where Do We Go', 'Billie Eilish', 'Music', '2019-03-29', 'English', 'United States'],
+  ['Happier Than Ever', 'Billie Eilish', 'Music', '2021-07-30', 'English', 'United States'],
+  ['Punisher', 'Phoebe Bridgers', 'Music', '2020-06-18', 'English', 'United States'],
+  ['Be the Cowboy', 'Mitski', 'Music', '2018-08-17', 'English', 'United States'],
+  ['Laurel Hell', 'Mitski', 'Music', '2022-02-04', 'English', 'United States'],
+  ['Puberty 2', 'Mitski', 'Music', '2016-06-17', 'English', 'United States'],
+  ['Soft Sounds from Another Planet', 'Japanese Breakfast', 'Music', '2017-07-14', 'English', 'United States'],
+  ['Jubilee', 'Japanese Breakfast', 'Music', '2021-06-04', 'English', 'United States'],
+  ['Psychopomp', 'Japanese Breakfast', 'Music', '2016-04-01', 'English', 'United States'],
+  ['Sawayama', 'Rina Sawayama', 'Music', '2020-04-17', 'English', 'United Kingdom'],
+  ['Hold the Girl', 'Rina Sawayama', 'Music', '2022-09-16', 'English', 'United Kingdom'],
+  ['Immunity', 'Clairo', 'Music', '2019-08-02', 'English', 'United States'],
+  ['Sling', 'Clairo', 'Music', '2021-07-16', 'English', 'United States'],
+  ['Stranger in the Alps', 'Phoebe Bridgers', 'Music', '2017-09-22', 'English', 'United States'],
+  ['The Land Is Inhospitable and So Are We', 'Mitski', 'Music', '2023-09-15', 'English', 'United States'],
+  ['Beware of the Dogs', 'Stella Donnelly', 'Music', '2019-03-08', 'English', 'Australia'],
+  ['Superache', 'Conan Gray', 'Music', '2022-06-24', 'English', 'United States'],
+  ['Kid Krow', 'Conan Gray', 'Music', '2020-03-20', 'English', 'United States'],
+].forEach((x) => r(...x))
+
+// --- Podcasts & games & misc ---
+;[
+  ['Asian Americana', 'Quincy Surasmith', 'Podcast', '2016-01-01', 'English', 'United States'],
+  ['They Call Us Bruce', 'Phil Yu', 'Podcast', '2017-01-01', 'English', 'United States'],
+  ['Long Distance', 'Paola Mardo', 'Podcast', '2017-01-01', 'English', 'United States'],
+  ['Saturday School', 'Ada Tseng', 'Podcast', '2018-01-01', 'English', 'United States'],
+  ['Southern Fried Asian', 'Keith Chow', 'Podcast', '2018-01-01', 'English', 'United States'],
+  ['Dear Asian Americans', 'Jerry Won', 'Podcast', '2020-01-01', 'English', 'United States'],
+  ['Asian Boss Girl', 'Various', 'Podcast', '2018-01-01', 'English', 'United States'],
+  ['Rock the Boat', 'Lucy Yu', 'Podcast', '2020-01-01', 'English', 'United States'],
+  ['Books and Boba', 'Various', 'Podcast', '2018-01-01', 'English', 'United States'],
+  ['Southern Fried Rice', 'Various', 'Podcast', '2019-01-01', 'English', 'United States'],
+  ['Tides of History', 'Various', 'Podcast', '2018-01-01', 'English', 'United States'],
+  ['The Mash-Up Americans', 'Various', 'Podcast', '2015-01-01', 'English', 'United States'],
+  ['Asian Not Asian', 'Youngmi Mayer and Brian Park', 'Podcast', '2018-01-01', 'English', 'United States'],
+  ['Feeling Asian', 'Various', 'Podcast', '2020-01-01', 'English', 'United States'],
+  ['Bad Asian Podcast', 'Various', 'Podcast', '2019-01-01', 'English', 'United States'],
+  ['Ghost in the Shell', 'Masahiro Sakurai', 'Video game', '1997-07-17', 'Japanese', 'Japan'],
+  ['Final Fantasy VII', 'Square', 'Video game', '1997-01-31', 'Japanese', 'Japan'],
+  ['Final Fantasy X', 'Square', 'Video game', '2001-07-19', 'Japanese', 'Japan'],
+  ['Persona 5', 'Atlus', 'Video game', '2016-09-15', 'Japanese', 'Japan'],
+  ['Nier: Automata', 'Yoko Taro', 'Video game', '2017-02-23', 'Japanese', 'Japan'],
+  ['Elden Ring', 'Hidetaka Miyazaki', 'Video game', '2022-02-25', 'English', 'Japan'],
+  ['Sekiro: Shadows Die Twice', 'Hidetaka Miyazaki', 'Video game', '2019-03-22', 'English', 'Japan'],
+  ['Street Fighter II', 'Capcom', 'Video game', '1991-02-06', 'Japanese', 'Japan'],
+  ['Tekken 7', 'Bandai Namco', 'Video game', '2015-03-18', 'Japanese', 'Japan'],
+  ['Metal Gear Solid', 'Hideo Kojima', 'Video game', '1998-09-03', 'English / Japanese', 'Japan'],
+  ['Death Stranding', 'Hideo Kojima', 'Video game', '2019-11-08', 'English', 'Japan'],
+  ['The Legend of Zelda: Breath of the Wild', 'Nintendo', 'Video game', '2017-03-03', 'Japanese / English', 'Japan'],
+  ['Animal Crossing: New Horizons', 'Nintendo', 'Video game', '2020-03-20', 'Japanese / English', 'Japan'],
+  ['Genshin Impact', 'miHoYo', 'Video game', '2020-09-28', 'Mandarin / English', 'China'],
+  ['Honkai: Star Rail', 'miHoYo', 'Video game', '2023-04-26', 'Mandarin / English', 'China'],
+  ['Black Myth: Wukong', 'Game Science', 'Video game', '2024-08-20', 'Mandarin / English', 'China'],
+  ['Rajinikanth: The Definitive Biography', 'Naman Ramachandran', 'Book', '2012-12-12', 'English', 'India'],
+  ['The Sympathizer', 'Park Chan-wook', 'TV Show', '2024-04-14', 'English / Vietnamese', 'United States'],
+  ['Pachinko', 'Kogonada', 'TV Show', '2022-03-25', 'Korean / English', 'United States'],
+  ['American Born Chinese', 'Destin Daniel Cretton', 'TV Show', '2023-05-24', 'English', 'United States'],
+  ['Warrior', 'Jonathan Tropper', 'TV Show', '2019-04-05', 'English / Cantonese', 'United States'],
+  ['The Brothers Sun', 'Brad Falchuk', 'TV Show', '2024-01-04', 'English', 'United States'],
+  ['The Summer I Turned Pretty', 'Jenny Han', 'TV Show', '2022-06-17', 'English', 'United States'],
+  ['XO Kitty', 'Jenny Han', 'TV Show', '2023-05-18', 'English', 'United States'],
+  ['To All the Boys Ive Loved Before', 'Susan Johnson', 'Movie', '2018-08-17', 'English', 'United States'],
+  ['Always Be My Maybe', 'Nahnatchka Khan', 'Movie', '2019-05-31', 'English', 'United States'],
+  ['The Half of It', 'Alice Wu', 'Movie', '2020-05-01', 'English', 'United States'],
+  ['The Farewell', 'Lulu Wang', 'Movie', '2019-07-12', 'English', 'United States'],
+  ['Minari', 'Lee Isaac Chung', 'Movie', '2020-01-26', 'Korean / English', 'United States'],
+  ['Past Lives', 'Celine Song', 'Movie', '2023-06-02', 'English / Korean', 'United States'],
+  ['Joy Ride', 'Adele Lim', 'Movie', '2023-06-23', 'English', 'United States'],
+  ['Shortcomings', 'Randall Park', 'Movie', '2023-08-04', 'English', 'United States'],
+  ['Quiz Lady', 'Jessica Yu', 'Movie', '2023-09-09', 'English', 'United States'],
+  ['The Tiger Mom', 'Various', 'Documentary', '2014-01-01', 'English', 'United States'],
+].forEach((x) => r(...x))
+
+dropIf((l) => l.startsWith('The Tiger Mom|'))
+dropIf((l) => l.startsWith('Ghost in the Shell|Masahiro'))
+r(
+  'Ghost in the Shell',
+  'Exact / Production I.G.',
+  'Video game',
+  '1997-07-17',
+  'Japanese',
+  'Japan',
+)
+
+// Final dedupe
+{
+  const s = new Set()
+  const out = []
+  for (const l of records) {
+    if (s.has(l)) continue
+    s.add(l)
+    out.push(l)
+  }
+  records.length = 0
+  records.push(...out)
+}
+
+const outPath = path.join(__dirname, 'data', 'generated.pipe')
+fs.mkdirSync(path.dirname(outPath), { recursive: true })
+fs.writeFileSync(outPath, records.join('\n') + '\n', 'utf8')
+console.log('Wrote', records.length, 'lines to', outPath)
