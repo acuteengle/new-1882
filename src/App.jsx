@@ -119,7 +119,7 @@ export default function App() {
 
     async function load() {
       try {
-        const res = await fetch('/media.csv')
+        const res = await fetch(`${import.meta.env.BASE_URL}media.csv`)
         if (!res.ok) throw new Error('Could not load media catalog')
         const text = await res.text()
         const parsed = Papa.parse(text, {
